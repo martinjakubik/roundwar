@@ -151,6 +151,14 @@ body {
     width: 0pt;
 }
 
+.fannedCard {
+    top: -10pt;
+    position: relative;
+
+    margin: 0 0 0 2pt;
+    width: 24pt;
+}
+
 .result {
     display: inline-block;
     padding: 4pt 14pt;

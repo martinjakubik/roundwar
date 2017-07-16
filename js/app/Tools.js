@@ -43,6 +43,16 @@ define('Tools', function () {
         }
     };
 
+    Tools.toggleClass = function (oView, sClass) {
+        var sClasses = oView.getAttribute('class');
+
+        if (sClasses.indexOf(sClass) < 0) {
+            Tools.addClass(oView, sClass);
+        } else {
+            Tools.removeClass(oView, sClass);
+        }
+    };
+
     /**
     * shuffles a set of things
     */
