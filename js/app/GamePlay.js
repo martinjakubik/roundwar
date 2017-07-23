@@ -327,7 +327,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
             case WAITING_TO_FILL_TABLE:
                 // checks if the player already has a face-up card on the table
                 if (GamePlay.doesPlayerHaveCardOnTableFaceUp(oPlayer)) {
-                    // does nothing
+                    // wiggles the card
                     if (bIsLocalEvent) {
                         oPlayer.wiggleCardInHand();
                     }
@@ -662,9 +662,9 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                 var oPlayerHandValue = oPlayerValue.hand;
                 var oPlayerTableValue = oPlayerValue.table || [];
 
-                // creates a temporary player so we can pass a non-null object
-                // to the updateGamePlay method (this does nothing)
-                var oTempPlayer = new Player(0, null, -1);
+                // recreates a remote player controller to pass to the
+                // updateGamePlay method
+                var oRemotePlayer = new Player(0, null, -1);
 
                 // sets player's hand
                 if (oPlayerHandValue && oGamePlay.playerControllers[0]) {
@@ -672,7 +672,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                         oPlayerHandValue
                     );
                     oGamePlay.playerControllers[0].renderHand();
-                    oTempPlayer.setHand(oPlayerHandValue);
+                    oRemotePlayer.setHand(oPlayerHandValue);
                 }
 
                 // sets player's table
@@ -681,10 +681,10 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                         oPlayerTableValue
                     );
                     oGamePlay.playerControllers[0].renderTable();
-                    oTempPlayer.setTable(oPlayerTableValue);
+                    oRemotePlayer.setTable(oPlayerTableValue);
                 }
 
-                oGamePlay.updateGamePlay.call(oGamePlay, oTempPlayer, bIsLocalEvent);
+                oGamePlay.updateGamePlay.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
             }
         });
 
@@ -698,9 +698,9 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                 var oPlayerHandValue = oPlayerValue.hand;
                 var oPlayerTableValue = oPlayerValue.table || [];
 
-                // creates a temporary player so we can pass a non-null object
-                // to the updateGamePlay method (this does nothing)
-                var oTempPlayer = new Player(1, null, -1);
+                // recreates a remote player controller to pass to the
+                // updateGamePlay method
+                var oRemotePlayer = new Player(1, null, -1);
 
                 // sets player's hand
                 if (oPlayerHandValue && oGamePlay.playerControllers[1]) {
@@ -708,7 +708,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                         oPlayerHandValue
                     );
                     oGamePlay.playerControllers[1].renderHand();
-                    oTempPlayer.setHand(oPlayerHandValue);
+                    oRemotePlayer.setHand(oPlayerHandValue);
                 }
 
                 // sets player's table
@@ -717,10 +717,10 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                         oPlayerTableValue
                     );
                     oGamePlay.playerControllers[1].renderTable();
-                    oTempPlayer.setTable(oPlayerTableValue);
+                    oRemotePlayer.setTable(oPlayerTableValue);
                 }
 
-                oGamePlay.updateGamePlay.call(oGamePlay, oTempPlayer, bIsLocalEvent);
+                oGamePlay.updateGamePlay.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
             }
         });
     };
