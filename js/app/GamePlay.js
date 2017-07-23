@@ -83,10 +83,9 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
     };
 
     /**
-     * Checks table to see if the game is, if it's a war, or if it's time to
-     * gather cards.
+     * Checks table to see if it's a war, or if it's time to gather cards.
      */
-    GamePlay.prototype.checkTable = function () {
+    GamePlay.prototype.updateGameStateBasedOnTable = function () {
 
 
         if (this.playerControllers.length > 1
@@ -317,12 +316,12 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
     }
 
     /**
-     * updates the game based on current state and an event
+     * updates the game when player wants to play a card, based on current state
      *
-     * @param oPlayer a player on whom the event happened
+     * @param oPlayer a player controller on whom the event happened
      * @param bIsLocalEvent true if the event happened in the local UI
      */
-    GamePlay.prototype.updateGamePlay = function (oPlayer, bIsLocalEvent) {
+    GamePlay.prototype.playerWantsToPlayACard = function (oPlayer, bIsLocalEvent) {
         switch (this.state) {
             case WAITING_TO_FILL_TABLE:
                 // checks if the player already has a face-up card on the table
@@ -367,8 +366,43 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                 break;
         }
 
-        this.checkTable();
+        // updates the game state based on the table
+        this.updateGameStateBasedOnTable();
 
+    };
+
+    /**
+     * updates the game when player wants to gather cards, based on current
+     * state
+     *
+     * @param oPlayer a player controller on whom the event happened
+     * @param bIsLocalEvent true if the event happened in the local UI
+     */
+    GamePlay.prototype.playerWantsToGatherCards = function (oPlayer, bIsLocalEvent) {
+        switch (this.state) {
+            case WAITING_TO_FILL_TABLE:
+                // table not full; can't gather cards
+                break;
+            case WAITING_FOR_FACE_DOWN_WAR_CARD:
+
+                // war is happening; checks if any player ran out of cards and
+                // lost
+                this.isGameFinished();
+
+                break;
+            case WAITING_TO_GATHER_CARDS:
+                // if table is full, lets the winning player gather the cards
+                if (bIsLocalEvent) {
+                    this.gatherCards();
+                    this.numMoves++;
+                }
+                break;
+            default:
+                break;
+        }
+
+        // updates the game state based on the table
+        this.updateGameStateBasedOnTable();
     };
 
     /**
@@ -407,7 +441,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
 
         // checks if the tap is a legitimate move in the game
         if (oPlayer && this.allPlayersJoined && this.state !== GAME_OVER) {
-            this.updateGamePlay.call(this, oPlayer, bIsLocalEvent);
+            this.playerWantsToPlayACard.call(this, oPlayer, bIsLocalEvent);
         } else {
             // does nothing
             oPlayer.wiggleCardInHand();
@@ -663,7 +697,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                 var oPlayerTableValue = oPlayerValue.table || [];
 
                 // recreates a remote player controller to pass to the
-                // updateGamePlay method
+                // playerWantsToPlayACard method
                 var oRemotePlayer = new Player(0, null, -1);
 
                 // sets player's hand
@@ -684,7 +718,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                     oRemotePlayer.setTable(oPlayerTableValue);
                 }
 
-                oGamePlay.updateGamePlay.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
+                oGamePlay.playerWantsToPlayACard.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
             }
         });
 
@@ -699,7 +733,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                 var oPlayerTableValue = oPlayerValue.table || [];
 
                 // recreates a remote player controller to pass to the
-                // updateGamePlay method
+                // playerWantsToPlayACard method
                 var oRemotePlayer = new Player(1, null, -1);
 
                 // sets player's hand
@@ -720,7 +754,7 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
                     oRemotePlayer.setTable(oPlayerTableValue);
                 }
 
-                oGamePlay.updateGamePlay.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
+                oGamePlay.playerWantsToPlayACard.call(oGamePlay, oRemotePlayer, bIsLocalEvent);
             }
         });
     };
