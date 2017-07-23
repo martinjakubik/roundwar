@@ -572,11 +572,13 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
      */
     GamePlay.prototype.makePlayerController = function(nPlayerNum, aPlayers, oPlayerRef, fnLocalPlayerWantsToPlayCard, sSessionId, bIsRemote) {
 
+        var bIsSplitHalf = true;
+
         // gets or creates player's browser session Id
         sSessionId = sSessionId ? sSessionId : GamePlay.getBrowserSessionId();
 
         aPlayers.push(new Player(nPlayerNum, oPlayerRef, this.cardWidth, sSessionId, bIsRemote));
-        aPlayers[nPlayerNum].setOnTapCardInHand(fnLocalPlayerWantsToPlayCard.bind(this));
+        aPlayers[nPlayerNum].setOnTapCardInHand(fnLocalPlayerWantsToPlayCard.bind(this), bIsSplitHalf);
 
     };
 
