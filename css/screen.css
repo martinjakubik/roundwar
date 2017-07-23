@@ -138,6 +138,8 @@ body {
     border-left: none;
 
     background-position: -96px;
+
+    transition: width .1s;
 }
 
 .card>.content {
@@ -157,6 +159,8 @@ body {
 
     margin: 0 0 0 2pt;
     width: 74pt;
+
+    transition: width .5s;
 }
 
 .result {
