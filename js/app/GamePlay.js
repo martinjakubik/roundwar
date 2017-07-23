@@ -415,27 +415,31 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
         // gets the player and the player view
         var oTarget = oEvent.currentTarget;
 
-        var oPlayerView = (oTarget && oTarget.parentNode) ? oTarget.parentNode.parentNode : null;
+        var oCardView = oTarget ? oTarget.parentNode : null;
+        var oPlayerView = (oCardView) ? oCardView.parentNode : null;
         var sPlayerViewId = null;
         var oPlayer = null;
+        var oCard = null;
 
         if (oPlayerView) {
             sPlayerViewId = oPlayerView.getAttribute('id');
             if (sPlayerViewId) {
                 oPlayer = this.findPlayerForPlayerViewId(sPlayerViewId);
+                oCard = oPlayer.getIndexOfCardViewInHand(oCardView);
             }
         }
 
-        this.playerTappedCardInHand(oPlayer, bIsLocalEvent);
+        this.playerTappedCardInHand(oPlayer, oCard, bIsLocalEvent);
     };
 
     /**
      * reacts to a local or remote player tapping a card in their hand
      *
      * @param oPlayer a player on whom the event happened
+     * @param oCard a a card on which the event happened
      * @param bIsLocalEvent true if the event happened in the local UI
      */
-    GamePlay.prototype.playerTappedCardInHand = function (oPlayer, bIsLocalEvent) {
+    GamePlay.prototype.playerTappedCardInHand = function (oPlayer, oCard, bIsLocalEvent) {
 
         var i;
 
@@ -539,7 +543,6 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
         this.playerControllers[1].renderTable();
 
         // lets player 0 play
-        this.playerControllers[0].addOnTapToTopCardInHand(this.localPlayerTappedCardInHand.bind(this));
         this.playerControllers[0].renderTable();
         this.playerControllers[0].renderHand();
 
@@ -562,18 +565,18 @@ define('GamePlay', ['Player', 'Tools'], function (Player, Tools) {
      * @param nPlayerNum player number
      * @param aPlayers the list of players to add the player to
      * @param oPlayerRef a reference to the remote player
-     * @param fnLocalPlayerTappedCardInHand handler for when local player taps
+     * @param fnLocalPlayerWantsToPlayCard handler for when local player taps
      *          card in hand
      * @param sSessionId the ID of the current browser session
      * @param bIsRemote if the player is remote
      */
-    GamePlay.prototype.makePlayerController = function(nPlayerNum, aPlayers, oPlayerRef, fnLocalPlayerTappedCardInHand, sSessionId, bIsRemote) {
+    GamePlay.prototype.makePlayerController = function(nPlayerNum, aPlayers, oPlayerRef, fnLocalPlayerWantsToPlayCard, sSessionId, bIsRemote) {
 
         // gets or creates player's browser session Id
         sSessionId = sSessionId ? sSessionId : GamePlay.getBrowserSessionId();
 
         aPlayers.push(new Player(nPlayerNum, oPlayerRef, this.cardWidth, sSessionId, bIsRemote));
-        aPlayers[nPlayerNum].addOnTapToTopCardInHand(fnLocalPlayerTappedCardInHand.bind(this));
+        aPlayers[nPlayerNum].setOnTapCardInHand(fnLocalPlayerWantsToPlayCard.bind(this));
 
     };
 
