@@ -53,6 +53,30 @@ define('Tools', function () {
         }
     };
 
+    Tools.addStyle = function (oView, sStyleName, sStyleValue) {
+        var sStyles = oView.style ? oView.style.cssText : null;
+
+        oView.style[sStyleName] = sStyleValue;
+    };
+
+    Tools.setStyle = function (oView, sStyleName, sStyleValue) {
+        oView.style[sStyleName] = sStyleValue;
+    };
+
+    Tools.removeStyle = function (oView, sStyleName) {
+        oView.style[sStyleName] = '';
+    };
+
+    Tools.toggleStyle = function (oView, sStyleName, sStyleValue) {
+        var sStyles = oView.style ? oView.style.cssText : null;
+
+        if (sStyles && sStyles.indexOf(sStyleName) < 0) {
+            Tools.addStyle(oView, sStyleName, sStyleValue);
+        } else {
+            Tools.removeStyle(oView, sStyleName);
+        }
+    };
+
     /**
     * shuffles a set of things
     */
