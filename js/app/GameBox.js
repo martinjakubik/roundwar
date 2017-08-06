@@ -1,6 +1,6 @@
 /*global require */
 /*global Audio: false */
-requirejs(['GamePlay', 'Tools'], function (GamePlay, Tools) {
+requirejs(['RoundWarGamePlay', 'Tools'], function (RoundWarGamePlay, Tools) {
 
     'use strict';
 
@@ -122,7 +122,7 @@ requirejs(['GamePlay', 'Tools'], function (GamePlay, Tools) {
 
     var aPlayerNames = [ 'mouse', 'koala', 'hedgehog', 'mole', 'dolphin', 'salmon', 'cobra', 'owl', 'chimpanzee' ];
 
-    var oGamePlay = new GamePlay(
+    var oRoundWarGamePlay = new RoundWarGamePlay(
         nNumPlayers,
         aCards,
         aSounds,
@@ -134,6 +134,6 @@ requirejs(['GamePlay', 'Tools'], function (GamePlay, Tools) {
             getRandomPlayerName: GameBox.getRandomPlayerName
         }
     );
-    oGamePlay.start();
+    oRoundWarGamePlay.start();
 
 });
