@@ -36,58 +36,23 @@ define('RoundWarGamePlay', ['GamePlay', 'Player', 'Tools', 'GameSession'], funct
     }
 
     /**
-     * Moves cards to the table or moves the table cards to the hand of the
-     * player that won the turn.
-     * Or adds another card to the table in case of a tie.
+     * Indicates who won the hand, based on the two players' cards.
+     *
+     * @param aPlayerControllers an array of players
+     *
+     * @return number of the player who won, or -1 if it's a tie
      */
-    RoundWarGamePlay.prototype.gatherCards = function () {
+    RoundWarGamePlay.prototype.whoWonTheHand = function (aPlayerControllers) {
 
-        var i;
+        var nWinningPlayer = -1;
 
-        // decides what to do if all players have played
-        if (this.doAllPlayersHaveSameNumberOfCardsOnTable() && this.state === WAITING_TO_GATHER_CARDS) {
-
-            // checks if player 0 won the hand
-            if (RoundWarGamePlay.roundCompare(this.playerControllers[0].getTableCard().value, this.playerControllers[1].getTableCard().value)) {
-
-                // every five moves, randomly switches order of the gathered cards
-                if (this.numMoves % 5 === 0 && Math.random() > 0.5) {
-                    // moves everyone's cards to the winner's hand, player 1 first
-                    this.playerControllers[0].moveTableToHand(this.playerControllers[1].getTable());
-                    this.playerControllers[0].moveTableToHand();
-                } else {
-                    // moves everyone's cards to the winner's hand, player 0 first
-                    this.playerControllers[0].moveTableToHand();
-                    this.playerControllers[0].moveTableToHand(this.playerControllers[1].getTable());
-                }
-
-                // updates the loser's cards
-                this.playerControllers[1].updateRemoteReference();
-            } else if (RoundWarGamePlay.roundCompare(this.playerControllers[1].getTableCard().value, this.playerControllers[0].getTableCard().value)) {
-                // player 1 won the hand
-
-                // every five moves, randomly switches order of the gathered cards
-                if (this.numMoves % 5 === 0 && Math.random()) {
-                    // moves everyone's cards to the winner's hand, player 0 first
-                    this.playerControllers[1].moveTableToHand(this.playerControllers[0].getTable());
-                    this.playerControllers[1].moveTableToHand();
-                } else {
-                    // moves everyone's cards to the winner's hand, player 1 first
-                    this.playerControllers[1].moveTableToHand();
-                    this.playerControllers[1].moveTableToHand(this.playerControllers[0].getTable());
-                }
-
-                // updates the loser's cards
-                this.playerControllers[0].updateRemoteReference();
-            }
-
-            this.isGameFinished();
-
-            this.state = WAITING_TO_FILL_TABLE;
-
-            this.renderCards();
-
+        if (RoundWarGamePlay.roundCompare(aPlayerControllers[0].getTableCard().value, aPlayerControllers[1].getTableCard().value)) {
+            nWinningPlayer = 0;
+        } else if (RoundWarGamePlay.roundCompare(aPlayerControllers[1].getTableCard().value, aPlayerControllers[0].getTableCard().value)) {
+            nWinningPlayer = 1;
         }
+
+        return nWinningPlayer;
     };
 
     /**
