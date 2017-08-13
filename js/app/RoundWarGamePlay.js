@@ -42,48 +42,21 @@ define('RoundWarGamePlay', ['GamePlay', 'Player', 'Tools', 'GameSession'], funct
      *
      * @return number of the player who won, or -1 if it's a tie
      */
-    RoundWarGamePlay.prototype.whoWonTheHand = function (aPlayerControllers) {
+    RoundWarGamePlay.prototype.whoseCardWins = function (aPlayerControllers) {
 
         var nWinningPlayer = -1;
 
-        if (RoundWarGamePlay.roundCompare(aPlayerControllers[0].getTableCard().value, aPlayerControllers[1].getTableCard().value)) {
-            nWinningPlayer = 0;
-        } else if (RoundWarGamePlay.roundCompare(aPlayerControllers[1].getTableCard().value, aPlayerControllers[0].getTableCard().value)) {
-            nWinningPlayer = 1;
+        if (aPlayerControllers[0].getTable().length > 0
+            && aPlayerControllers[1].getTable().length > 0) {
+
+                if (RoundWarGamePlay.roundCompare(aPlayerControllers[0].getTableCard().value, aPlayerControllers[1].getTableCard().value)) {
+                    nWinningPlayer = 0;
+                } else if (RoundWarGamePlay.roundCompare(aPlayerControllers[1].getTableCard().value, aPlayerControllers[0].getTableCard().value)) {
+                    nWinningPlayer = 1;
+                }
         }
 
         return nWinningPlayer;
-    };
-
-    /**
-     * checks if one player has won
-     */
-    RoundWarGamePlay.prototype.isGameFinished = function () {
-
-        var i, nOtherPlayer;
-
-        for (i = 0; i < this.playerControllers.length; i++) {
-
-            // checks if the player's hand is empty
-            if (this.playerControllers[i].hand.length === 0) {
-
-                if (i === 0) {
-                    nOtherPlayer = 1;
-                } else if (i === 1) {
-                    nOtherPlayer = 0;
-                }
-
-                // checks if the same player's table loses to the other player
-                if (this.playerControllers[i].getTableCard().value < this.playerControllers[nOtherPlayer].getTableCard().value) {
-
-                    this.result = this.playerControllers[nOtherPlayer].getName() + ' wins';
-                    this.callbacks.renderResult(this.result);
-                    this.state = GAME_OVER;
-                    return true;
-                }
-            }
-        }
-        return false;
     };
 
     /**
