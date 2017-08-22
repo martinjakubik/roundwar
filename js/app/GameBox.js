@@ -107,7 +107,9 @@ requirejs(['RoundWarGamePlay', 'Tools'], function (RoundWarGamePlay, Tools) {
       6, 1, 2, 2, 3, 5
     ];
 
-    var aCards = oGameBox.makeCards(aBatanimalCardValues);
+    var bAddSkunk = true;
+
+    var aCards = oGameBox.makeCards(aBatanimalCardValues, bAddSkunk);
 
     var aSounds = {
          hamsterSound: new Audio('../resources/hamster-wheel.wav'),
@@ -134,6 +136,9 @@ requirejs(['RoundWarGamePlay', 'Tools'], function (RoundWarGamePlay, Tools) {
             getRandomPlayerName: GameBox.getRandomPlayerName
         }
     );
-    oRoundWarGamePlay.start();
+
+    var bShuffleCards = true;
+
+    oRoundWarGamePlay.start(bShuffleCards);
 
 });
