@@ -19,4 +19,6 @@ TODO to Move to supertitle packaging
  - delete grunt file from kierki
  - add DOCTYPE html
  - rewrite js function-classes as ES6 classes (...X.prototype = Object.create(...prototype) => class X)
-
+ - copy resources/* to app/
+ - update references in css from ../resources to ./
+ - update references in scripts from ../resources to ./app/
