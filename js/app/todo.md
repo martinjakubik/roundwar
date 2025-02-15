@@ -1,0 +1,22 @@
+TODO to Move to supertitle packaging
+
+ - create ./app directory
+ - move ./js files to ./app
+ - move ./js/app files to ./app
+ - move ./js/lib files to ./app
+ - update links in ./app/*.css files from ../js/lib/ to ./
+ - move ./html files to ./app
+ - update links in ./app/*.html files from ../app/ to ./
+ - update links in ./app/*.html files from ../js/lib/ to ./
+ - update links in ./app/*.js files from ./app to ./
+ - update links in ./app/*.js files from ../lib to ./
+ - move ./js/test files to ./test
+ - update links in ./app/*.html files from ../js/lib/ to ./
+ - update postinstall.js to point to new app and lib paths
+ - update Card.js to ES6 imports and class
+ - delete grunt file
+ - delete grunttasks directory
+ - delete grunt file from kierki
+ - add DOCTYPE html
+ - rewrite js function-classes as ES6 classes (...X.prototype = Object.create(...prototype) => class X)
+
